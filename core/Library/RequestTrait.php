@@ -6,9 +6,14 @@ trait RequestTrait
 {
     static public function getRotaParametros()
     {
-        $auxPar         = filter_var(rtrim($_REQUEST['REQUEST_URI'], "/"), FILTER_SANITIZE_URL);
-        $aParametros    = explode("/", ltrim($auxPar, "/"));
+        $auxPar         = [];
         $outrosPar      = [];
+        $aParametros    = [];
+
+        if (isset($_REQUEST['parametros'])) {
+            $auxPar         = filter_var(rtrim($_REQUEST['parametros'], "/"), FILTER_SANITIZE_URL);
+            $aParametros    = explode("/", ltrim($auxPar, "/"));
+        }
     
         // Outros parâmetros
         if (count($aParametros) > 4) {

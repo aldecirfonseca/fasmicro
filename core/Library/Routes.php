@@ -18,10 +18,10 @@ class Routes
         $controller     = $pathContr . $aParametros['controller'];
         
         if (!class_exists($controller)) {
-            Erros::controllerNotFound();
+            Erros::controllerNotFound($aParametros['controller']);
         } else {
             if (!method_exists($controller, $aParametros['method'])) {
-                Erros::methodNotFound();
+                Erros::methodNotFound($aParametros['method']);
             } else {
                 $instance = new $controller();
 

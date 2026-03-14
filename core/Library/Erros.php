@@ -9,9 +9,9 @@ class Erros
      *
      * @return void
      */
-    public static function controllerNotFound()
+    public static function controllerNotFound($nomeController = DEFAULT_CONTROLLER)
     {
-        echo "Controller não localizado na estrutura do projeto.";
+        echo "Controller ({$nomeController}) não localizado na estrutura do projeto.";
     }
 
     /**
@@ -19,8 +19,8 @@ class Erros
      *
      * @return void
      */
-    public static function methodNotFound()
+    public static function methodNotFound($nomeMethod = DEFAULT_METHOD)
     {
-        echo "Método não licalizado no controller.";
+        echo "Método ({$nomeMethod}) não localizado no controller.";
     }
 }

@@ -23,4 +23,4 @@
     $ambiente->load();
 
     // Chamar a rota
-    $routes->rota();  
+    $routes->rota(); 
