@@ -8,10 +8,9 @@ class Home extends ControllerMain
 {
     public function index()
     {
-        echo "Bem vindo ao FasMicro";
-        echo "<p>";
-        echo '<a href="/categoria/teste">Categoria</a>';
-        echo "</p>";
+        return $this->view('home', [
+            'titulo' => "Bem-vindo ao FasMicro"
+        ]);
     }
 
     public function sobrenos()
