@@ -11,14 +11,9 @@ class Categoria extends ControllerMain
        return $this->view(
             "admin/listaCategoria",
             [
-                'titulo' => "Lista de Categorias -----",
-                "categorias" => [
-                    "Tecnologia",
-                    "Ciências",
-                    "Artes",
-                    "Esportes",
-                    "Cultura"
-                ]
+                'titulo' => "Lista de Categorias",
+                "categorias" => $this->model->lista(),
+                "aStatus" => $this->model->listaStatus 
             ]
         );
     }

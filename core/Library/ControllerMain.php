@@ -26,9 +26,25 @@ class ControllerMain
         $this->template     = new Template();
 
         // Carregamento de model default do controller
+        $this->model        = $this->loadModel($this->controller);
 
         // Carregamento de helpers
         // Verificação de permissão dos controllers autorizados sem login
+    }
+
+    /**
+     * loadModel
+     *
+     * @param string $nomeModel
+     * @return void|object
+     */
+    public function loadModel(string $nomeModel)
+    {
+        $pathModel = 'App\model\\' . $nomeModel . "Model";
+
+        if (class_exists($pathModel)) {
+            return new $pathModel();
+        }
     }
 
     /**

@@ -23,7 +23,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/categoria" class="nav-link" title="Ver Categorias">Categoria</a>
+                        <a href="/categoria" class="nav-link" title="Crud Categorias">Categoria (CRUD)</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Pricing</a>
