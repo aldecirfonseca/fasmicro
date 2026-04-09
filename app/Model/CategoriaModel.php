@@ -22,4 +22,72 @@ class CategoriaModel extends ModelMain
             ->orderBy("descricao")
             ->findAll();
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getById($id)
+    {
+        if ($id == 0) {
+            return [];
+        } else {
+            return $this->db->where("id", $id)->first();
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $dados
+     * @return bool
+     */
+    public function insert($dados)
+    {
+        unset($dados['id']);
+
+        if ($this->db->insert($dados) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $dados
+     * @return bool
+     */
+    public function update($dados)
+    {
+        if ($this->db
+            ->where($this->primaryKey, $dados[$this->primaryKey])
+            ->update($dados) > 0
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $dados
+     * @return bool
+     */
+    public function delete($dados) 
+    {
+        if ($this->db
+            ->where($this->primaryKey, $dados[$this->primaryKey])
+            ->delete() > 0
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

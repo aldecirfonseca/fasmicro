@@ -1,8 +1,17 @@
+<?php
+use Core\Library\Session;
+?>
+
 <h1><?= $titulo ?? "Lista Categoria" ?></h1>
 <p>
     <a href="/categoria/form/insert" class="btn btn-primary btn-sm" title="Nova Categoria">
         Novo
     </a>
+</p>
+
+<p>
+    <?= Session::get("msgSucesso") ?? "" ?>
+    <?= Session::get("msgError") ?? "" ?>
 </p>
 
 <?php if (!empty($categorias)): ?>
