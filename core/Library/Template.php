@@ -12,7 +12,7 @@ class Template
     public function __construct()
     {
         $this->viewPath = PATHAPP . 'app' . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR;
-        $this->layoutPath = $this->viewPath . 'layout' . DIRECTORY_SEPARATOR;
+        $this->layoutPath = $this->viewPath . 'Layout' . DIRECTORY_SEPARATOR;
     }
 
     /**
