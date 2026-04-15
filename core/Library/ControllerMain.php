@@ -42,7 +42,7 @@ class ControllerMain
      */
     public function loadModel(string $nomeModel)
     {
-        $pathModel = 'App\model\\' . $nomeModel . "Model";
+        $pathModel = 'App\Model\\' . $nomeModel . "Model";
 
         if (class_exists($pathModel)) {
             return new $pathModel();
