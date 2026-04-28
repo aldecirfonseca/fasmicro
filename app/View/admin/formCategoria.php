@@ -1,11 +1,4 @@
-<div class="row bg-primary text-white m-2">
-    <div class="col-10 p-2">
-        <h2><?= $titulo ?></h2>
-    </div>
-    <div class="col-2 text-end p-2">
-        <a href="/categoria" class="btn btn-outline-info text-white" title="Voltar">Voltar</a>
-    </div>
-</div>
+<?=  formTitulo('Categoria') ?>
 
 <div class="m-2">
     <form method="POST" action="/categoria/<?= $data['action'] ?>">
@@ -44,10 +37,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <a href="/categoria" class="btn btn-outline-info" title="Voltar">Voltar</a>
-                <?php if ($data['action'] != "view"): ?>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                <?php endif; ?>
+                <?= formButton() ?>
             </div>
         </div>
 

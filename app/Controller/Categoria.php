@@ -7,9 +7,16 @@ use Core\Library\Redirect;
 
 class Categoria extends ControllerMain
 {
+    public function __construct()
+    {
+        $this->loadHelper('formHelper');
+
+        return parent::__construct();
+    }
+
     public function index()
     {
-       return $this->view(
+        return $this->view(
             "admin/listaCategoria",
             [
                 'titulo' => "Lista de Categorias",
