@@ -16,7 +16,7 @@ use Core\Library\Session;
 
 <?php if (!empty($categorias)): ?>
 
-    <table class="table table-sm">
+    <table class="table table-sm m-3">
         <thead>
             <tr>
                 <th>Id</th>

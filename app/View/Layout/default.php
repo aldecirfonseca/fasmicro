@@ -33,7 +33,7 @@
         </div>
     </nav>
 
-    <main>
+    <main class="m-1">
         <?= $content ?>
     </main>
 
