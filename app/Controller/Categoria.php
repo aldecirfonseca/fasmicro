@@ -51,7 +51,7 @@ class Categoria extends ControllerMain
         if ($this->model->insert($_POST)) {
             return Redirect::page("categoria", ['msgSucesso' => "Registro inserido com sucesso."]);
         } else {
-            return Redirect::page("categoria", ['msgError' => "Falha ao inserir registro."]);
+            return Redirect::page("categoria/form/" . $this->action . "/0", ['msgError' => "Falha ao inserir registro."]);
         }
     }
 

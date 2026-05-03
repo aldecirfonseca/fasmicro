@@ -91,6 +91,10 @@ class Template
             throw new \RuntimeException("View não encontrada: {$viewFile}");
         }
 
+        if (function_exists('_viewData')) {
+            _viewData($data);
+        }
+
         extract($data, EXTR_SKIP);
         ob_start();
         include $viewFile;

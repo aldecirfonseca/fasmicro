@@ -29,7 +29,7 @@ class ControllerMain
         $this->model        = $this->loadModel($this->controller);
 
         // Carregamento de helpers
-        $this->loadHelper('url');
+        $this->loadHelper(['url', 'data']);
         
         // Verificação de permissão dos controllers autorizados sem login
     }

@@ -1,5 +1,11 @@
 <?=  formTitulo('Categoria') ?>
 
+<?php
+use Core\Library\Session;
+
+var_dump(Session::get('formErrors'), Session::get('formInputs'));
+?>
+
 <div class="m-3">
     <form method="POST" action="/categoria/<?= $action ?>">
 
@@ -7,7 +13,7 @@
             type="hidden"
             name="id"
             id="id"
-            value="<?= $data['id'] ?? 0 ?>">
+            value="<?= setValue('id', 0) ?>">
 
         <div class="row">
             <div class="col-9">
@@ -19,7 +25,7 @@
                     id="descricao"
                     placeholder="Descrição da Categoria"
                     maxlength="50"
-                    value="<?= $data['descricao'] ?? '' ?>"
+                    value="<?= setValue('descricao') ?>"
                     required
                     autofocus>
             </div>
@@ -28,7 +34,7 @@
                 <select class="form-control" name="statusRegistro" id="statusRegistro">
                     <option value="">...</option>
                     <?php foreach ($aStatus as $key => $value): ?>
-                        <?php $statusSelected = $key == $data['statusRegistro']; ?>
+                        <?php $statusSelected = $key == setValue('statusRegistro'); ?>
                         <option value="<?= $key ?>" <?= $statusSelected ? "selected" : '' ?>><?= $value ?></option>
                     <?php endforeach; ?>
                 </select>

@@ -38,7 +38,7 @@ class Validator
 
                             case 'float' :
 
-                                if (!filter_var($data[$ruleKey], FILTER_VALIDATE_FLOAT)){
+                                if (!filter_var($data[$ruleKey], FILTER_VALIDATE_FLOAT))  {
                                     $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> deve conter número decimal.";
                                 }
 
@@ -46,7 +46,7 @@ class Validator
 
                             case 'int' :
 
-                                if (!filter_var($data[$ruleKey], FILTER_VALIDATE_INT)){
+                                if (!filter_var($data[$ruleKey], FILTER_VALIDATE_INT)) {
                                     $errors[$ruleKey] = "O campo <b>{$ruleValue['label']}</b> deve conter número inteiro.";
                                 }
 
@@ -79,12 +79,12 @@ class Validator
         }
 
         if ($errors) {                          // Se encontrar erros na validação
-            Session::set('errors', $errors);
-            Session::set('inputs', $data);
+            Session::set('formErrors', $errors);
+            Session::set('formInputs', $data);
             return true;
         } else {
-            Session::destroy('errors');
-            Session::destroy('inputs');
+            Session::destroy('formErrors');
+            Session::destroy('formInputs');
             return false;
         }
     }
