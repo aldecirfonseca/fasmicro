@@ -6,10 +6,15 @@ class Redirect
 {
     static public function page($caminho, $widt = [])
     {
-        if (count($widt) > 0) {
-            foreach ($widt as $key => $value) {
-                Session::set($key, $value);
+        $hasValidationErrors = Session::get('formErrors') !== false;
+        
+        foreach ($widt as $key => $value) {
+        
+            if ($key === 'msgError' && $hasValidationErrors) {
+                continue;
             }
+
+            Session::set($key, $value);
         }
 
         return header("Location: " . baseUrl() . $caminho);

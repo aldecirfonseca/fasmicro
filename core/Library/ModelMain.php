@@ -6,8 +6,11 @@ class ModelMain
 {
     public $db;
     public $validationRules = [];
+    public $primaryKey = "id";
+    public $titulo = '';
+    public $listaStatus = [];
+    
     protected $table;
-    protected $primaryKey = "id";
 
     public function __construct()
     {

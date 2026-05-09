@@ -8,6 +8,8 @@ class CategoriaModel extends ModelMain
 {
     protected $table = "categoria";
 
+    public $titulo = 'Categoria';
+
     public $listaStatus = [
         1 => "Ativo",
         2 => "Inativo"

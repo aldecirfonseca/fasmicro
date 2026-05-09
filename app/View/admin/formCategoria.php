@@ -1,10 +1,4 @@
-<?=  formTitulo('Categoria') ?>
-
-<?php
-use Core\Library\Session;
-
-var_dump(Session::get('formErrors'), Session::get('formInputs'));
-?>
+<?=  formTitulo($titulo) ?>
 
 <div class="m-3">
     <form method="POST" action="/categoria/<?= $action ?>">
@@ -28,6 +22,7 @@ var_dump(Session::get('formErrors'), Session::get('formInputs'));
                     value="<?= setValue('descricao') ?>"
                     required
                     autofocus>
+                <?= setMsgFilderError('descricao') ?>
             </div>
             <div class="col-3">
                 <label for="statusRegistro">Status</label>
@@ -38,6 +33,7 @@ var_dump(Session::get('formErrors'), Session::get('formInputs'));
                         <option value="<?= $key ?>" <?= $statusSelected ? "selected" : '' ?>><?= $value ?></option>
                     <?php endforeach; ?>
                 </select>
+                <?= setMsgFilderError('statusRegistro') ?>
             </div>
         </div>
 

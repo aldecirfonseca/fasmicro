@@ -7,6 +7,8 @@
     <title><?= $titulo ?></title>
 
     <link rel="stylesheet" href="/assests/bootstrap/css/bootstrap.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -22,12 +24,30 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="/categoria" class="nav-link" title="Crud Categorias">Categoria (CRUD)</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
+
+                    <?php if (!isset($_SESSION['userLogin'])): ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Login/login">Login</a>
+                        </li>
+                    
+                    <?php else: ?>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                nome usuário
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Sair</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Trocar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/categoria">Categoria</a></li>
+                            </ul>
+                        </li>
+                    
+                    <?php endif; ?>
+
                 </ul>
             </div>
         </div>

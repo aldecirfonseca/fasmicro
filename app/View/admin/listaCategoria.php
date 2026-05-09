@@ -2,9 +2,9 @@
 use Core\Library\Session;
 ?>
 
-<?= formTitulo('Lista Categoria', true) ?>
+<?= formTitulo($titulo, true) ?>
 
-<?php if (!empty($categorias)): ?>
+<?php if (!empty($lista)): ?>
 
     <table class="table table-sm m-3">
         <thead>
@@ -17,15 +17,15 @@ use Core\Library\Session;
         </thead>
         <tbody>
 
-            <?php foreach ($categorias as $categoria): ?>
+            <?php foreach ($lista as $item): ?>
                 <tr>
-                    <td><?= $categoria['id'] ?></td>
-                    <td><?= $categoria['descricao'] ?></td>
-                    <td><?= $aStatus[$categoria['statusRegistro']] ?></td>
+                    <td><?= $item['id'] ?></td>
+                    <td><?= $item['descricao'] ?></td>
+                    <td><?= $aStatus[$item['statusRegistro']] ?></td>
                     <td>
-                        <?= buttons('view'  , $categoria['id']) ?>
-                        <?= buttons('update', $categoria['id']) ?>
-                        <?= buttons('delete', $categoria['id']) ?>
+                        <?= buttons('view'  , $item['id']) ?>
+                        <?= buttons('update', $item['id']) ?>
+                        <?= buttons('delete', $item['id']) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -34,7 +34,7 @@ use Core\Library\Session;
     </table>
         
 <?php else: ?>
-    <p class="text-muted">Nenhuma Categoria encontrada.</p>
+    <p class="text-muted">Nenhuma <?= $titulo ?> encontrada.</p>
 <?php endif;?>
 
 <a href="/" class="btn btn-secondary mt-3">Voltar</a>

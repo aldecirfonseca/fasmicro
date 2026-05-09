@@ -3,7 +3,7 @@
         <h3>Login</h3>
     </div>
     <div class="card-body">
-        <form action="login/signIn" method="POST">
+        <form action="/Login/signIn" method="POST">
             <div class="row">
                 <div class="mb-3 col-12">
                     <label for="email" class="form-label">Email</label>
