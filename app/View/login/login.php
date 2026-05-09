@@ -1,36 +1,78 @@
-<div class="card col-lg-4 card-background">
-    <div class="card-header">
-        <h3>Login</h3>
+<div class="login-split">
+
+    <!-- Painel esquerdo: branding -->
+    <div class="login-brand-panel">
+
+        <div class="brand-logo">Fas<span>Micro</span></div>
+
+        <h1 class="brand-headline">Framework PHP<br>Minimalista e<br>Poderoso</h1>
+
+        <p class="brand-description">
+            FasMicro é um micro-framework PHP desenvolvido para ensinar
+            os fundamentos do padrão MVC de forma prática e objetiva,
+            com roteamento, templates, validação e muito mais.
+        </p>
+
+        <div class="brand-tags">
+            <span class="brand-tag">PHP 8+</span>
+            <span class="brand-tag">MVC</span>
+            <span class="brand-tag">Open Source</span>
+            <span class="brand-tag">UI Design</span>
+        </div>
+
     </div>
-    <div class="card-body">
-        <form action="/Login/signIn" method="POST">
-            <div class="row">
-                <div class="mb-3 col-12">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control border-dark" id="email" name="email" placeholder="Informe seu e-mail" value="" required autofocus>
+
+    <!-- Painel direito: formulário -->
+    <div class="login-form-panel">
+
+        <div class="login-card">
+
+            <h2>Login</h2>
+            <p class="login-subtitle">Preencha os campos abaixo com suas dados de acesso</p>
+
+            <?= exibeAlerta() ?>
+
+            <form method="POST" action="<?= baseUrl() ?>Login/signIn">
+
+                <div class="mb-3">
+                    <label for="email">E-mail</label>
+                    <input
+                        type="email"
+                        class="form-control"
+                        name="email"
+                        id="email"
+                        placeholder="Digite seu e-mail"
+                        value="<?= setValue('email') ?>"
+                        required
+                        autofocus>
+                    <?= setMsgFilderError('email') ?>
                 </div>
-                <div class="mb-3 col-12">
-                    <label for="senha" class="form-label">Senha</label>
-                    <input type="password" class="form-control border-dark" id="senha" name="senha" required>
+
+                <div class="mb-4">
+                    <label for="senha">Senha</label>
+                    <input
+                        type="password"
+                        class="form-control"
+                        name="senha"
+                        id="senha"
+                        placeholder="Digite sua senha"
+                        required>
+                    <?= setMsgFilderError('senha') ?>
                 </div>
-                <div class="col-12 d-flex justify-content-between mt-3 mb-2">
-                    <h6><a href="<?= baseUrl() ?>Login/esqueciASenha" class="text-decoration-none">Esqueci minha senha!</a></h6>
-                    <!--
-                    <h6><a href="/Login/cadastrarLogin" class="link-secondary fw-bold">Quero criar uma conta</a></h6>
-                    -->
+
+                <div class="mb-2">
+                    <button type="submit" class="btn btn-login">Entrar</button>
                 </div>
-                <div class="col-12 mb-3">
-                    <!-- adiconar mensagens de error ou sucesso -->
-                </div>                        
-                <div class="mb-3 col-12 d-flex justify-content-between">
-                    <div class="col-sm-6 col-lg-4">
-                        <button class="btn btn-primary">Entrar</button>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 d-flex justify-content-end">
-                        <a href="<?= baseUrl() ?>" class="btn btn-outline-primary">Voltar</a>
-                    </div>
+
+                <div class="login-footer-links">
+                    <a href="<?= baseUrl() ?>">← Voltar</a>
+                    <a href="<?= baseUrl() ?>Login/esqueciASenha">Esqueci minha senha</a>
                 </div>
-            </div>
-        </form>
+
+            </form>
+
+        </div>
+
     </div>
+
 </div>

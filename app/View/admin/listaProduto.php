@@ -11,6 +11,10 @@ use Core\Library\Session;
             <tr>
                 <th>Id</th>
                 <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Un.</th>
+                <th class="text-end">Estoque</th>
+                <th class="text-end">Preço Venda</th>
                 <th>Status</th>
                 <th>Opções</th>
             </tr>
@@ -21,9 +25,13 @@ use Core\Library\Session;
                 <tr>
                     <td><?= $item['id'] ?></td>
                     <td><?= $item['descricao'] ?></td>
+                    <td><?= $item['nomeCategoria'] ?></td>
+                    <td><?= $item['siglaUnidade'] ?></td>
+                    <td class="text-end"><?= number_format($item['saldoEstoque'], 3, ',', '.') ?></td>
+                    <td class="text-end"><?= number_format($item['precoVenda'], 2, ',', '.') ?></td>
                     <td><?= $aStatus[$item['statusRegistro']] ?></td>
                     <td>
-                        <?= buttons('view'  , $item['id']) ?>
+                        <?= buttons('view',   $item['id']) ?>
                         <?= buttons('update', $item['id']) ?>
                         <?= buttons('delete', $item['id']) ?>
                     </td>
@@ -32,9 +40,9 @@ use Core\Library\Session;
 
         </tbody>
     </table>
-        
+
 <?php else: ?>
-    <p class="text-muted m-3">Nenhuma <?= $titulo ?> encontrada.</p>
-<?php endif;?>
+    <p class="text-muted m-3">Nenhum <?= $titulo ?> encontrado.</p>
+<?php endif; ?>
 
 <a href="/" class="btn btn-secondary m-3">Voltar</a>

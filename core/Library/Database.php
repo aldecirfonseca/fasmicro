@@ -306,7 +306,7 @@ class Database
      * dbResultado
      *
      * @param object $rscRes 
-     * @param array $CampoRetorno 
+     * @param array|string|int $CampoRetorno 
      * @return void
      */
     public function dbResultado($rscRes, $CampoRetorno)

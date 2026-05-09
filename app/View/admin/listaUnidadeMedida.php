@@ -10,6 +10,7 @@ use Core\Library\Session;
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Sigla</th>
                 <th>Descrição</th>
                 <th>Status</th>
                 <th>Opções</th>
@@ -20,6 +21,7 @@ use Core\Library\Session;
             <?php foreach ($lista as $item): ?>
                 <tr>
                     <td><?= $item['id'] ?></td>
+                    <td><?= $item['sigla'] ?></td>
                     <td><?= $item['descricao'] ?></td>
                     <td><?= $aStatus[$item['statusRegistro']] ?></td>
                     <td>
@@ -32,7 +34,7 @@ use Core\Library\Session;
 
         </tbody>
     </table>
-        
+
 <?php else: ?>
     <p class="text-muted m-3">Nenhuma <?= $titulo ?> encontrada.</p>
 <?php endif;?>

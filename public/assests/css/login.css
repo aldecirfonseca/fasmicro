@@ -1,0 +1,215 @@
+/* ── Reset / base ─────────────────────────────────── */
+body.login-page {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* ── Split container ──────────────────────────────── */
+.login-split {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Painel esquerdo – branding ───────────────────── */
+.login-brand-panel {
+    flex: 0 0 45%;
+    background: linear-gradient(150deg, #0f0c29 0%, #302b63 55%, #24243e 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3.5rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Círculos decorativos de fundo */
+.login-brand-panel::before,
+.login-brand-panel::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.08;
+    background: #fff;
+}
+.login-brand-panel::before {
+    width: 380px;
+    height: 380px;
+    top: -100px;
+    right: -120px;
+}
+.login-brand-panel::after {
+    width: 260px;
+    height: 260px;
+    bottom: -80px;
+    left: -60px;
+}
+
+.brand-logo {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+    color: #fff;
+}
+
+.brand-logo span {
+    color: #818cf8;
+}
+
+.brand-headline {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+}
+
+.brand-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.72);
+    margin-bottom: 2.5rem;
+    max-width: 360px;
+}
+
+.brand-tags {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.brand-tag {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    border: 1.5px solid rgba(255, 255, 255, 0.30);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+}
+
+/* ── Painel direito – formulário ──────────────────── */
+.login-form-panel {
+    flex: 1;
+    background-color: #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* ── Card do formulário ───────────────────────────── */
+.login-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+    padding: 2.5rem 2.5rem 2rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card h2 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: #1a1a2e;
+}
+
+.login-card .login-subtitle {
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+}
+
+.login-card label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.35rem;
+}
+
+.login-card .form-control {
+    border-radius: 24px;
+    padding: 0.70rem 1.1rem;
+    border: 1.5px solid #dee2e6;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-card .form-control:focus {
+    border-color: #302b63;
+    background-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(48, 43, 99, 0.15);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #302b63, #24243e);
+    border: none;
+    color: #fff;
+    transition: opacity 0.2s;
+}
+
+.btn-login:hover {
+    opacity: 0.88;
+    color: #fff;
+}
+
+.login-footer-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+}
+
+.login-footer-links a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.login-footer-links a:hover {
+    color: #302b63;
+}
+
+/* ── Responsivo ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .login-split {
+        flex-direction: column;
+    }
+
+    .login-brand-panel {
+        flex: none;
+        padding: 2.5rem 2rem;
+    }
+
+    .login-brand-panel::before {
+        width: 220px;
+        height: 220px;
+        top: -60px;
+        right: -60px;
+    }
+
+    .login-brand-panel::after {
+        display: none;
+    }
+
+    .brand-headline {
+        font-size: 1.7rem;
+    }
+
+    .brand-description {
+        display: none;
+    }
+}

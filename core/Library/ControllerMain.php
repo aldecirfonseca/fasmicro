@@ -3,6 +3,7 @@
 namespace Core\Library;
 
 use Core\Library\Redirect;
+use Core\Library\Request;
 
 class ControllerMain
 {
@@ -21,6 +22,7 @@ class ControllerMain
      */
     public function __construct()
     {
+        $this->request      = new Request();
         $aParametros        = Self::getRotaParametros();
         $this->controller   = $aParametros['controller'];
         $this->method       = $aParametros['method'];
@@ -31,7 +33,7 @@ class ControllerMain
         $this->model        = $this->loadModel($this->controller);
 
         // Carregamento de helpers
-        $this->loadHelper(['url', 'data', 'formHelper']);
+        $this->loadHelper(['url', 'data', 'formHelper', 'jsHelper']);
         
         // Verificação de permissão dos controllers autorizados sem login
     }
@@ -128,14 +130,14 @@ class ControllerMain
 
     public function insert()
     {
-        if ($this->model->insert($_POST)) {
+        if ($this->model->insert($this->request->getPost())) {
             return Redirect::page(
-                        $this->controller, 
+                        $this->controller,
                         ['msgSucesso' => "Registro inserido com sucesso."]
                     );
         } else {
             return Redirect::page(
-                    $this->controller. "/form/" . $this->method . "/0", 
+                    $this->controller. "/form/" . $this->method . "/0",
                     ['msgError' => "Falha ao inserir registro."]
                 );
         }
@@ -143,14 +145,16 @@ class ControllerMain
 
     public function update()
     {
-        if ($this->model->update($_POST)) {
+        $post = $this->request->getPost();
+
+        if ($this->model->update($post)) {
             return Redirect::page(
-                    $this->controller, 
+                    $this->controller,
                     ['msgSucesso' => "Registro atualizado com sucesso."]
                 );
         } else {
             return Redirect::page(
-                    $this->controller . '/form/' . $this->method . '/' . $_POST[$this->model->primaryKey], 
+                    $this->controller . '/form/' . $this->method . '/' . $post[$this->model->primaryKey],
                     ['msgError' => "Falha ao atualizar registro."]
                 );
         }
@@ -158,7 +162,7 @@ class ControllerMain
 
     public function delete()
     {
-        if ($this->model->delete($_POST)) {
+        if ($this->model->delete($this->request->getPost())) {
             return Redirect::page(
                     $this->controller, 
                     ['msgSucesso' => "Registro excluído com sucesso."]

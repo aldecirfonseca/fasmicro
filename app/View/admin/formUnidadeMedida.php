@@ -1,0 +1,60 @@
+<?= formTitulo($titulo) ?>
+
+<div class="m-3">
+    <form method="POST" action="/unidademedida/<?= $action ?>">
+
+        <input
+            type="hidden"
+            name="id"
+            id="id"
+            value="<?= setValue('id', 0) ?>">
+
+        <div class="row">
+            <div class="col-2">
+                <label for="sigla">Sigla</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="sigla"
+                    id="sigla"
+                    placeholder="Ex: kg"
+                    maxlength="2"
+                    value="<?= setValue('sigla') ?>"
+                    required
+                    autofocus>
+                <?= setMsgFilderError('sigla') ?>
+            </div>
+            <div class="col-7">
+                <label for="descricao">Descrição</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="descricao"
+                    id="descricao"
+                    placeholder="Descrição da Unidade de Medida"
+                    maxlength="50"
+                    value="<?= setValue('descricao') ?>"
+                    required>
+                <?= setMsgFilderError('descricao') ?>
+            </div>
+            <div class="col-3">
+                <label for="statusRegistro">Status</label>
+                <select class="form-control" name="statusRegistro" id="statusRegistro">
+                    <option value="">...</option>
+                    <?php foreach ($aStatus as $key => $value): ?>
+                        <?php $statusSelected = $key == setValue('statusRegistro'); ?>
+                        <option value="<?= $key ?>" <?= $statusSelected ? "selected" : '' ?>><?= $value ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <?= setMsgFilderError('statusRegistro') ?>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <?= formButton() ?>
+            </div>
+        </div>
+
+    </form>
+</div>
