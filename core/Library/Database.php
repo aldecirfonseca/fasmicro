@@ -21,6 +21,7 @@ class Database
     private $join = "";
     private $where = "";
     private $groupBy = "";
+    private $having = "";
     private $orderBy = "";
     private $limit = "";
     private $offset = null;
@@ -356,35 +357,33 @@ class Database
     }
 
     /**
-     * whereHaving
+     * buildCondition - base privada compartilhada por where/orWhere e having/orHaving
      *
-     * @param string|array $condition 
-     * @param string $params 
-     * @param string $operadorLogico 
+     * @param string $target       referência à propriedade alvo ($where ou $having)
+     * @param string $keyword      palavra-chave SQL (WHERE ou HAVING)
+     * @param string|array $condition
+     * @param string $params
+     * @param string $operadorLogico
      * @return object
      */
-    public function whereHaving($condition, $params = "", $operadorLogico = 'AND')
+    private function buildCondition(&$target, $keyword, $condition, $params, $operadorLogico)
     {
         $operadores = ["=", ">=", "<=", ">", "<", "<>"];
 
-        if ($this->where == "") {
-            $this->where = " WHERE ";
+        if ($target == "") {
+            $target = " {$keyword} ";
         } else {
-            $this->where .= " {$operadorLogico} ";
+            $target .= " {$operadorLogico} ";
         }
 
-        if (gettype($condition) == "string") {
+        if (is_string($condition)) {
 
             $aKey = explode(" ", $condition);
 
-            if (count($aKey) > 1) {
-                if (in_array(explode(" ", $condition)[1], $operadores)) {
-                    $this->where .= $condition . " ? ";
-                } else {
-                    $this->where .= $condition . " = ? ";
-                }
+            if (count($aKey) > 1 && in_array(end($aKey), $operadores)) {
+                $target .= $condition . " ? ";
             } else {
-                $this->where .= $condition . " = ? ";
+                $target .= $condition . " = ? ";
             }
 
             $this->params = array_merge($this->params, [$params]);
@@ -396,76 +395,42 @@ class Database
             foreach ($condition as $key => $value) {
 
                 if ($lAnd) {
-                    $this->where .= " {$operadorLogico} ";
+                    $target .= " {$operadorLogico} ";
                 } else {
                     $lAnd = true;
                 }
 
                 $aKey = explode(" ", $key);
 
-                if (count($aKey) > 1) {
-                    if (in_array(explode(" ", $key)[1], $operadores)) {
-                        $this->where .= $key . " ? ";
-                    } else {
-                        $this->where .= $key . " = ? ";
-                    }
+                if (count($aKey) > 1 && in_array(end($aKey), $operadores)) {
+                    $target .= $key . " ? ";
                 } else {
-                    $this->where .= $key . " = ? ";
+                    $target .= $key . " = ? ";
                 }
             }
 
-            $this->params = array_values($condition);
+            $this->params = array_merge($this->params, array_values($condition));
         }
 
         return $this;
     }
 
     /**
-     * where
+     * buildWhereIn - base privada compartilhada por whereIn e whereNotIn
      *
-     * @param string|array $condition 
-     * @param string $params 
+     * @param string $field
+     * @param array $params
+     * @param string $operadorLogico
+     * @param bool $notIn
      * @return object
      */
-    public function where($condition, $params = "")
+    private function buildWhereIn($field, $params, $operadorLogico, $notIn)
     {
-        return $this->whereHaving($condition, $params);
-    }
+        $placeholders = array_fill(0, count($params), "?");
+        $this->params = array_merge($this->params, $params);
 
-    /**
-     * where
-     *
-     * @param string|array $condition 
-     * @param string $params 
-     * @return object
-     */
-    public function orWhere($condition, $params = "")
-    {
-        return $this->whereHaving($condition, $params, "OR");
-    }
+        $clause = "{$field} " . ($notIn ? "NOT " : "") . "IN (" . implode(', ', $placeholders) . ")";
 
-    /**
-     * whereIn
-     *
-     * @param string $field 
-     * @param array $params 
-     * @param string $operadorLogico 
-     * @param bool $notIn 
-     * @return object
-     */
-    public function whereInHaving($field, $params, $operadorLogico = 'AND', $notIn = false)
-    {
-        $placeholders = [];
-
-        foreach ($params as $i => $value) {
-            $placeholders[] = "?";
-            $this->params[] = $value;
-        }
-
-        // Monta cláusula IN
-        $clause = "{$field} " . ($notIn ? "NOT" : "" ) . " IN (" . implode(', ', $placeholders) . ")";
-
-        // Adiciona a cláusula WHERE
         if (empty($this->where)) {
             $this->where = " WHERE {$clause}";
         } else {
@@ -476,29 +441,53 @@ class Database
     }
 
     /**
-     * whereIn
+     * where
      *
-     * @param string $field 
-     * @param array $params 
-     * @param string $operadorLogico 
+     * @param string|array $condition
+     * @param string $params
      * @return object
      */
-    public function whereIn($field, $params, $operadorLogico = 'AND')
+    public function where($condition, $params = "")
     {
-        return $this->whereInHaving($field, $params, $operadorLogico);
+        return $this->buildCondition($this->where, 'WHERE', $condition, $params, 'AND');
+    }
+
+    /**
+     * orWhere
+     *
+     * @param string|array $condition
+     * @param string $params
+     * @return object
+     */
+    public function orWhere($condition, $params = "")
+    {
+        return $this->buildCondition($this->where, 'WHERE', $condition, $params, 'OR');
     }
 
     /**
      * whereIn
      *
-     * @param string $field 
-     * @param array $params 
-     * @param string $operadorLogico 
+     * @param string $field
+     * @param array $params
+     * @param string $operadorLogico
+     * @return object
+     */
+    public function whereIn($field, $params, $operadorLogico = 'AND')
+    {
+        return $this->buildWhereIn($field, $params, $operadorLogico, false);
+    }
+
+    /**
+     * whereNotIn
+     *
+     * @param string $field
+     * @param array $params
+     * @param string $operadorLogico
      * @return object
      */
     public function whereNotIn($field, $params, $operadorLogico = 'AND')
     {
-        return $this->whereInHaving($field, $params, $operadorLogico, true);
+        return $this->buildWhereIn($field, $params, $operadorLogico, true);
     }
 
     /**
@@ -591,10 +580,34 @@ class Database
     }
 
     /**
+     * having
+     *
+     * @param string|array $condition
+     * @param string $params
+     * @return object
+     */
+    public function having($condition, $params = "")
+    {
+        return $this->buildCondition($this->having, 'HAVING', $condition, $params, 'AND');
+    }
+
+    /**
+     * orHaving
+     *
+     * @param string|array $condition
+     * @param string $params
+     * @return object
+     */
+    public function orHaving($condition, $params = "")
+    {
+        return $this->buildCondition($this->having, 'HAVING', $condition, $params, 'OR');
+    }
+
+    /**
      * orderBy
      *
-     * @param string $column 
-     * @param string $direction 
+     * @param string $column
+     * @param string $direction
      * @return object
      */
     public function orderBy($column, $direction = "ASC")
@@ -630,10 +643,10 @@ class Database
                 if ($this->offset !== null) {
                     // SQL Server com OFFSET requer ORDER BY
                     $orderBy = $this->orderBy ?: " ORDER BY (SELECT NULL)";
-                    $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$orderBy} OFFSET {$this->offset} ROWS FETCH NEXT {$this->limit} ROWS ONLY";
+                    $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$orderBy} OFFSET {$this->offset} ROWS FETCH NEXT {$this->limit} ROWS ONLY";
                 } else {
                     // SQL Server sem OFFSET usa TOP
-                    $cSql = "SELECT TOP {$this->limit} {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}";
+                    $cSql = "SELECT TOP {$this->limit} {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}";
                 }
             } else {
                 // MySQL
@@ -641,10 +654,10 @@ class Database
                 if ($this->offset !== null) {
                     $limitSql .= " OFFSET {$this->offset}";
                 }
-                $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}{$limitSql}";
+                $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}{$limitSql}";
             }
         } else {
-            $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}";
+            $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}";
         }
 
         $query = $this->connect()->prepare($cSql, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
@@ -657,7 +670,7 @@ class Database
         } elseif ($tipoRetorno == "first") {
             return $this->dbBuscaArray($query);
         } elseif ($tipoRetorno == "count") {
-            return $this->dbNumeroLinhas($rscDados);
+            return $this->dbNumeroLinhas($query);
         }
     }
 
@@ -672,6 +685,7 @@ class Database
         $this->join = "";
         $this->where = "";
         $this->groupBy = "";
+        $this->having = "";
         $this->orderBy = "";
         $this->limit  = "";
         $this->offset = null;
