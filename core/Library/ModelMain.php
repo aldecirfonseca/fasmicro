@@ -77,6 +77,20 @@ class ModelMain
     }
 
     /**
+     * Valida, insere e retorna o ID do novo registro.
+     * Retorna 0 em caso de falha de validação ou erro de banco.
+     */
+    public function insertGetId(array $dados): int
+    {
+        if (Validator::make($dados, $this->validationRules)) {
+            return 0;
+        }
+
+        unset($dados[$this->primaryKey]);
+        return (int) $this->db->insert($dados);
+    }
+
+    /**
      * Undocumented function
      *
      * @param array $dados
@@ -89,7 +103,7 @@ class ModelMain
         } else {
             if ($this->db
                 ->where($this->primaryKey, $dados[$this->primaryKey])
-                ->update($dados) > 0
+                ->update($dados) >= 0
             ) {
                 return true;
             } else {

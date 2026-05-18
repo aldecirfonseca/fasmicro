@@ -29,4 +29,27 @@ class UnidadeMedidaModel extends ModelMain
             "rules" => "required|int"
         ]
     ];
+
+    public function lista($orderBy = "unidademedida.descricao")
+    {
+        return $this->db
+            ->select("unidademedida.*, COUNT(produto.id) AS totalProdutos")
+            ->join("produto", "produto.unidademedida_id = unidademedida.id", "LEFT")
+            ->groupBy("unidademedida.id")
+            ->orderBy($orderBy)
+            ->findAll();
+    }
+
+    public function temProdutosVinculados(int $id): bool
+    {
+        $rs = $this->db
+            ->table("produto")
+            ->select("COUNT(id) AS total")
+            ->where("unidademedida_id", $id)
+            ->first();
+
+        $this->db->table($this->table);
+
+        return (int)($rs['total'] ?? 0) > 0;
+    }
 }

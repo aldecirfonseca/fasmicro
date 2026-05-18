@@ -24,18 +24,36 @@ class ControllerMain
     {
         $this->request      = new Request();
         $aParametros        = Self::getRotaParametros();
-        $this->controller   = $aParametros['controller'];
+        $this->controller   = $aParametros['controller'];   
         $this->method       = $aParametros['method'];
         $this->action       = $aParametros['action'];
         $this->template     = new Template();
 
+        // Carregamento de helpers
+        $this->loadHelper(['url', 'data', 'formHelper', 'jsHelper']);
+
         // Carregamento de model default do controller
         $this->model        = $this->loadModel($this->controller);
 
-        // Carregamento de helpers
-        $this->loadHelper(['url', 'data', 'formHelper', 'jsHelper']);
-        
         // Verificação de permissão dos controllers autorizados sem login
+        if (!in_array($this->controller, CONTROLLER_AUTH)) {
+            if (!Session::get("userId")) {
+                return Redirect::page("Home/viewErros", ['msgError' => "Para acessar a rotina favor antes efetuar o login."]);
+            }
+        }
+    }
+
+    /**
+     * validaNivelAcesso
+     *
+     * @param int $nivelMinino 
+     * @return void
+     */
+    public function validaNivelAcesso(int $nivelMinino = 20)
+    {
+        if (((int)Session::get("userNivel") >= $nivelMinino)) {
+            return Redirect::page("Home/viewErros", ["msgError" => "Você não possui permissão neste programa"]);
+        }
     }
 
     /**
@@ -69,7 +87,7 @@ class ControllerMain
     }
 
     /**
-     * Undocumented function
+     * loadHelper
      *
      * @param string|array $nomeHelper
      * @return void
@@ -95,6 +113,11 @@ class ControllerMain
         }
     }
 
+    /**
+     * index
+     *
+     * @return void
+     */
     public function index()
     {
         return $this->view(
@@ -109,7 +132,7 @@ class ControllerMain
 
 
     /**
-     * Undocumented function
+     * form
      *
      * @param string $action
      * @param integer $id
@@ -128,6 +151,11 @@ class ControllerMain
         ); 
     }
 
+    /**
+     * insert
+     *
+     * @return void
+     */
     public function insert()
     {
         if ($this->model->insert($this->request->getPost())) {
@@ -143,6 +171,11 @@ class ControllerMain
         }
     }
 
+    /**
+     * update
+     *
+     * @return void
+     */
     public function update()
     {
         $post = $this->request->getPost();
@@ -160,6 +193,11 @@ class ControllerMain
         }
     }
 
+    /**
+     * delete
+     *
+     * @return void
+     */
     public function delete()
     {
         if ($this->model->delete($this->request->getPost())) {

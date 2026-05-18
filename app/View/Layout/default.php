@@ -7,9 +7,10 @@
     <title><?= $titulo ?></title>
 
     <link rel="stylesheet" href="/assests/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -44,11 +45,16 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/Login/signOut">Sair</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Trocar Senha</a></li>
+                                <li><a class="dropdown-item" href="/Login/trocarSenha">Trocar Senha</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/UnidadeMedida">Unidade de Medida</a></li>
                                 <li><a class="dropdown-item" href="/Categoria">Categoria</a></li>
                                 <li><a class="dropdown-item" href="/Produto">Produto</a></li>
+
+                                <?php if ((int)$_SESSION['userNivel'] <= 20): ?>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/Usuario">Usuários</a></li>
+                                <?php endif; ?>
                             </ul>
                         </li>
                     
@@ -63,8 +69,13 @@
         <?= $content ?>
     </main>
 
-    <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assests/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+            new bootstrap.Tooltip(el);
+        });
+    </script>
     <script>
         document.querySelectorAll('select').forEach(function (el) {
             if (el.closest('.ql-toolbar')) return;

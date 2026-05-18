@@ -17,6 +17,7 @@ class Redirect
             Session::set($key, $value);
         }
 
-        return header("Location: " . baseUrl() . $caminho);
+        header("Location: " . baseUrl() . $caminho);
+        exit;
     }
 }

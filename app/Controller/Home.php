@@ -11,6 +11,11 @@ use PHPMailer\PHPMailer\Exception as MailException;
 
 class Home extends ControllerMain
 {
+    /**
+     * index
+     *
+     * @return void
+     */
     public function index()
     {
         return $this->view('home', [
@@ -18,13 +23,18 @@ class Home extends ControllerMain
         ]);
     }
 
+    /**
+     * sobrenos
+     *
+     * @return void
+     */
     public function sobrenos()
     {
         echo "Sobre nós";
     }
 
     /**
-     * Undocumented function
+     * contato
      *
      * @return void
      */
@@ -36,7 +46,17 @@ class Home extends ControllerMain
     }
 
     /**
-     * Undocumented function
+     * viewErros
+     *
+     * @return void
+     */
+    public function viewErros()
+    {
+        return $this->view("erros");
+    }
+
+    /**
+     * enviarEmailcontato
      *
      * @return void
      */
@@ -53,7 +73,7 @@ class Home extends ControllerMain
         ]);
 
         if ($hasErrors) {
-            return Redirect::page('/contato');
+            return Redirect::page('Home/contato');
         }
 
         try {
@@ -75,11 +95,11 @@ class Home extends ControllerMain
             Session::set('msgError', 'Falha ao enviar e-mail. Tente novamente mais tarde.');
         }
 
-        return Redirect::page('/contato');
+        return Redirect::page('Home/contato');
     }
 
     /**
-     * Undocumented function
+     * corpoEmailContato
      *
      * @param array $dados
      * @return string

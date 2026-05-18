@@ -84,3 +84,25 @@ if (!function_exists("setMsgFilderError")) {
         return '<div class="mt-2 text-danger">' . $formErrors[$campo] . '</div>';
     }
 }
+
+if (!function_exists('nfValor')) {
+    function nfValor(float|int|string $valor, int $decimais = 2, string $decimalSep = ',', string $milharSep = '.'): string
+    {
+        return number_format((float)$valor, $decimais, $decimalSep, $milharSep);
+    }
+}
+
+if (! function_exists('validateDate')) {
+    /**
+     * validateDate
+     *
+     * @param mixed $date 
+     * @param string $format 
+     * @return bool
+     */
+    function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
+}

@@ -27,13 +27,15 @@ use Core\Library\Session;
                     <td>
                         <?= buttons('view'  , $item['id']) ?>
                         <?= buttons('update', $item['id']) ?>
-                        <?= buttons('delete', $item['id']) ?>
+                        <?= buttons('delete', $item['id'], (int)$item['totalProdutos'] > 0) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
 
         </tbody>
     </table>
+
+    <?= datatables("tbLista") ?>
 
 <?php else: ?>
     <p class="text-muted m-3">Nenhuma <?= $titulo ?> encontrada.</p>

@@ -27,8 +27,8 @@ use Core\Library\Session;
                     <td><?= $item['descricao'] ?></td>
                     <td><?= $item['nomeCategoria'] ?></td>
                     <td><?= $item['siglaUnidade'] ?></td>
-                    <td class="text-end"><?= number_format($item['saldoEstoque'], 3, ',', '.') ?></td>
-                    <td class="text-end"><?= number_format($item['precoVenda'], 2, ',', '.') ?></td>
+                    <td class="text-end"><?= nfValor($item['saldoEstoque'], 3) ?></td>
+                    <td class="text-end"><?= nfValor($item['precoVenda']) ?></td>
                     <td><?= $aStatus[$item['statusRegistro']] ?></td>
                     <td>
                         <?= buttons('view',   $item['id']) ?>
@@ -40,6 +40,8 @@ use Core\Library\Session;
 
         </tbody>
     </table>
+
+    <?= datatables("tbLista") ?>
 
 <?php else: ?>
     <p class="text-muted m-3">Nenhum <?= $titulo ?> encontrado.</p>

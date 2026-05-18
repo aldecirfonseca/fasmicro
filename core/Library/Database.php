@@ -22,7 +22,8 @@ class Database
     private $where = "";
     private $groupBy = "";
     private $orderBy = "";
-    private $limit = "";  
+    private $limit = "";
+    private $offset = null;
     private $params = [];
 
     /**
@@ -603,14 +604,49 @@ class Database
     }
 
     /**
+     * limit
+     *
+     * @param int $limit
+     * @param int|null $offset
+     * @return object
+     */
+    public function limit($limit, $offset = null)
+    {
+        $this->limit  = (int) $limit;
+        $this->offset = $offset !== null ? (int) $offset : null;
+        return $this;
+    }
+
+    /**
      * prepareSelect
      *
-     * @param string $tipoRetorno 
+     * @param string $tipoRetorno
      * @return array|int
      */
     public function prepareSelect($tipoRetorno = "all")
     {
-        $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}";
+        if ($this->limit !== "") {
+            if (self::$dbdrive === 'sqlsrv') {
+                if ($this->offset !== null) {
+                    // SQL Server com OFFSET requer ORDER BY
+                    $orderBy = $this->orderBy ?: " ORDER BY (SELECT NULL)";
+                    $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$orderBy} OFFSET {$this->offset} ROWS FETCH NEXT {$this->limit} ROWS ONLY";
+                } else {
+                    // SQL Server sem OFFSET usa TOP
+                    $cSql = "SELECT TOP {$this->limit} {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}";
+                }
+            } else {
+                // MySQL
+                $limitSql = " LIMIT {$this->limit}";
+                if ($this->offset !== null) {
+                    $limitSql .= " OFFSET {$this->offset}";
+                }
+                $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}{$limitSql}";
+            }
+        } else {
+            $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->orderBy}";
+        }
+
         $query = $this->connect()->prepare($cSql, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         $rscDados = $query->execute($this->params);
 
@@ -637,7 +673,8 @@ class Database
         $this->where = "";
         $this->groupBy = "";
         $this->orderBy = "";
-        $this->limit = "";  
+        $this->limit  = "";
+        $this->offset = null;
         $this->params = [];
     }
 
@@ -722,7 +759,7 @@ class Database
 
         } catch (\Exception $err) {
             Session::set("msgError", "Erro ao Atualizar dados na base de dados: " . $err->getMessage());
-            $rs = 0;
+            $rs = -1;
         }
 
         return $rs;

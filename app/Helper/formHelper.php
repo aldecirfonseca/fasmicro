@@ -91,7 +91,7 @@ if (!function_exists('buttons')) {
      * @param integer $id
      * @return string
      */
-    function buttons($acao, $id = 0)
+    function buttons($acao, $id = 0, $disabled = false)
     {
         $request = new Request();
         $button = "";
@@ -102,7 +102,13 @@ if (!function_exists('buttons')) {
         } elseif ($acao == "update") {
              $button .= '<a href="' . $urlButton . '/form/update/'. $id . '" class="btn btn-warning btn-sm" title="Alterar">Alterar</a>';
         } elseif ($acao == "delete") {
-             $button .= '<a href="' . $urlButton . '/form/delete/'. $id . '" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>';
+            if ($disabled) {
+                $button .= '<span data-bs-toggle="tooltip" data-bs-title="Existem produtos vinculados">'
+                         . '<button type="button" class="btn btn-danger btn-sm" disabled>Excluir</button>'
+                         . '</span>';
+            } else {
+                $button .= '<a href="' . $urlButton . '/form/delete/'. $id . '" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>';
+            }
         } elseif ($acao == "view") {
              $button .= '<a href="' . $urlButton . '/form/view/'. $id . '" class="btn btn-secondary btn-sm" title="Visualizar">Visualizar</a>';
         } elseif ($acao == "voltarTitulo") {
@@ -124,31 +130,70 @@ if (!function_exists('exibeAlerta')) {
      */
     function exibeAlerta()
     {
-        $msgSucesso = Session::getDestroy('msgSucesso');
-        $msgError = Session::getDestroy('msgError');
-        $msgAlerta = Session::getDestroy('msgAlerta');
+        $alertas = [
+            'success' => Session::getDestroy('msgSucesso'),
+            'danger'  => Session::getDestroy('msgError'),
+            'warning' => Session::getDestroy('msgAlerta'),
+        ];
 
-        $mensagem = '';
-        $classAlerta = '';
+        $html = '';
 
-        if ($msgSucesso != "") {
-            $mensagem = $msgSucesso;
-            $classAlerta = 'success';
-        } elseif ($msgError != "") {
-            $mensagem = $msgError;
-            $classAlerta = 'danger';
-        } elseif ($msgAlerta != "") {
-            $mensagem = $msgAlerta;
-            $classAlerta = 'warning';
-        }
-
-        if ($mensagem == "") {
-            return "";
-        } else {
-            return '<div class="alert alert-' . $classAlerta . ' alert-dismissible fade show" role="alert">
+        foreach ($alertas as $classe => $mensagem) {
+            if ($mensagem == '') {
+                continue;
+            }
+            $html .= '<div class="alert alert-' . $classe . ' alert-dismissible fade show" role="alert">
                         <strong>' . $mensagem . '</strong>.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>';
         }
+
+        return $html;
+    }
+}
+
+if (! function_exists('datatables')) {
+    /**
+     * datatables
+     *
+     * @param string $idTable 
+     * @return string
+     */
+    function datatables($idTable)
+    {
+        return '
+            <script src="/assests/DataTables/datatables.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $("#' . $idTable . '").DataTable({
+                        dom: "<\'mx-3\'<\'row\'<\'col-md-6\'l><\'col-md-6 d-flex justify-content-end\'f>>" +
+                             "<\'row\'<\'col-sm-12\'tr>>" +
+                             "<\'row\'<\'col-md-5\'i><\'col-md-7 d-flex justify-content-end\'p>>>",
+                        language: {
+                            "sEmptyTable":      "Nenhum registro encontrado",
+                            "sInfo":            "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                            "sInfoEmpty":       "Mostrando 0 até 0 de 0 registros",
+                            "sInfoFiltered":    "(Filtrados de _MAX_ registros)",
+                            "sInfoPostFix":     "",
+                            "sInfoThousands":   ".",
+                            "sLengthMenu":      "_MENU_ resultados por página",
+                            "sLoadingRecords":  "Carregando...",
+                            "sProcessing":      "Processando...",
+                            "sZeroRecords":     "Nenhum registro encontrado",
+                            "sSearch":          "Pesquisar",
+                            "oPaginate": {
+                                "sNext":        "Próximo",
+                                "sPrevious":    "Anterior",
+                                "sFirst":       "Primeiro",
+                                "sLast":        "Último"
+                            },
+                            "oAria": {
+                                "sSortAscending":   ": Ordenar colunas de forma ascendente",
+                                "sSortDescending":  ": Ordenar colunas de forma descendente"
+                            }
+                        }
+                    });
+                });
+            </script>';
     }
 }

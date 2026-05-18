@@ -1,7 +1,7 @@
 <?= formTitulo($titulo) ?>
 
 <div class="m-3">
-    <form method="POST" action="/Home/enviarEmailcontato">
+    <form method="POST" action="<?= baseUrl() ?>Home/enviarEmailcontato">
 
         <div class="row">
             <div class="col-md-6 mb-3">
