@@ -48,7 +48,7 @@ class Request
      */
     public function getGet(): array
     {
-        return array_map('trim', $this->param['get']);
+        return $this->trimRecursive($this->param['get']);
     }
 
     /**
@@ -56,11 +56,27 @@ class Request
      */
     public function getPost(): array
     {
-        return array_map('trim', $this->param['post']);
+        return $this->trimRecursive($this->param['post']);
     }
 
     /**
-     * Undocumented function
+     * trimRecursive
+     *
+     * @param array $data
+     * @return array
+     */
+    private function trimRecursive(array $data): array
+    {
+        return array_map(function ($value) {
+            if (is_array($value)) {
+                return $this->trimRecursive($value);
+            }
+            return is_string($value) ? trim($value) : $value;
+        }, $data);
+    }
+
+    /**
+     * formAction
      *
      * @return string
      */

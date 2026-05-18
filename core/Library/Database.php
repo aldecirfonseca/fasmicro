@@ -26,6 +26,7 @@ class Database
     private $limit = "";
     private $offset = null;
     private $params = [];
+    private $unions = [];
 
     /**
      * construct
@@ -343,11 +344,37 @@ class Database
     }
 
     /**
+     * union
+     *
+     * @param string $sql
+     * @param array $params
+     * @return object
+     */
+    public function union(string $sql, array $params = [])
+    {
+        $this->unions[] = ['type' => 'UNION', 'sql' => $sql, 'params' => $params];
+        return $this;
+    }
+
+    /**
+     * unionAll
+     *
+     * @param string $sql
+     * @param array $params
+     * @return object
+     */
+    public function unionAll(string $sql, array $params = [])
+    {
+        $this->unions[] = ['type' => 'UNION ALL', 'sql' => $sql, 'params' => $params];
+        return $this;
+    }
+
+    /**
      * join
      *
-     * @param string $table 
-     * @param string $condition 
-     * @param string $tipoJoin 
+     * @param string $table
+     * @param string $condition
+     * @param string $tipoJoin
      * @return object
      */
     public function join($table, $condition, $tipoJoin = "INNER")
@@ -638,30 +665,41 @@ class Database
      */
     public function prepareSelect($tipoRetorno = "all")
     {
+        // Query base sem ORDER BY e LIMIT (necessário para posicionar UNIONs antes deles)
+        $baseQuery = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having}";
+
+        // Acumula parâmetros de cada cláusula UNION
+        $allParams = $this->params;
+        foreach ($this->unions as $union) {
+            $baseQuery .= " {$union['type']} {$union['sql']}";
+            $allParams  = array_merge($allParams, $union['params']);
+        }
+
         if ($this->limit !== "") {
             if (self::$dbdrive === 'sqlsrv') {
                 if ($this->offset !== null) {
-                    // SQL Server com OFFSET requer ORDER BY
                     $orderBy = $this->orderBy ?: " ORDER BY (SELECT NULL)";
-                    $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$orderBy} OFFSET {$this->offset} ROWS FETCH NEXT {$this->limit} ROWS ONLY";
+                    $cSql = $baseQuery . $orderBy . " OFFSET {$this->offset} ROWS FETCH NEXT {$this->limit} ROWS ONLY";
                 } else {
-                    // SQL Server sem OFFSET usa TOP
-                    $cSql = "SELECT TOP {$this->limit} {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}";
+                    // TOP não pode ser usado diretamente com UNION — envolve em subquery
+                    $inner = empty($this->unions) ? $baseQuery : "({$baseQuery}) AS __union_result";
+                    $cSql  = empty($this->unions)
+                        ? "SELECT TOP {$this->limit} {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}"
+                        : "SELECT TOP {$this->limit} * FROM ({$baseQuery}) AS __union_result {$this->orderBy}";
                 }
             } else {
-                // MySQL
                 $limitSql = " LIMIT {$this->limit}";
                 if ($this->offset !== null) {
                     $limitSql .= " OFFSET {$this->offset}";
                 }
-                $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}{$limitSql}";
+                $cSql = $baseQuery . $this->orderBy . $limitSql;
             }
         } else {
-            $cSql = "SELECT {$this->select} FROM {$this->table} {$this->join} {$this->where} {$this->groupBy} {$this->having} {$this->orderBy}";
+            $cSql = $baseQuery . $this->orderBy;
         }
 
         $query = $this->connect()->prepare($cSql, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
-        $rscDados = $query->execute($this->params);
+        $query->execute($allParams);
 
         self::dbClear();
 
@@ -690,6 +728,7 @@ class Database
         $this->limit  = "";
         $this->offset = null;
         $this->params = [];
+        $this->unions = [];
     }
 
     /**
@@ -754,14 +793,24 @@ class Database
     /**
      * update
      *
-     * @param array $data 
+     * @param array $data
      * @return int
      */
     public function update(array $data)
     {
         try {
             $fields = implode(" = ?, ", array_keys($data)) . " = ?";
-            $sql    = "UPDATE {$this->table} SET {$fields} {$this->where}";
+
+            if ($this->join !== "") {
+                if (self::$dbdrive === 'sqlsrv') {
+                    $sql = "UPDATE {$this->table} SET {$fields} FROM {$this->table} {$this->join} {$this->where}";
+                } else {
+                    $sql = "UPDATE {$this->table} {$this->join} SET {$fields} {$this->where}";
+                }
+            } else {
+                $sql = "UPDATE {$this->table} SET {$fields} {$this->where}";
+            }
+
             $updData = array_merge(array_values($data), $this->params);
 
             $query  = $this->connect()->prepare($sql);
@@ -787,7 +836,11 @@ class Database
     public function delete()
     {
         try {
-            $sql    = "DELETE FROM {$this->table} {$this->where};";
+            if ($this->join !== "") {
+                $sql = "DELETE {$this->table} FROM {$this->table} {$this->join} {$this->where}";
+            } else {
+                $sql = "DELETE FROM {$this->table} {$this->where}";
+            }
 
             $query  = $this->connect()->prepare($sql);
             $query->execute($this->params);
