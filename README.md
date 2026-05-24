@@ -66,10 +66,8 @@ Consulte a pasta **[docs/](docs/)** para documentação detalhada:
 | [Arquitetura](docs/architecture.md) | Estrutura de diretórios e classes do núcleo |
 | [Rotas Web](docs/routes.md) | Rotas públicas e administrativas |
 | [Banco de Dados](docs/database.md) | Tabelas, relacionamentos e papéis de usuário |
+| [Classe Database](docs/database-class.md) | Query Builder, métodos raw e referência completa da classe `Database` |
 | [API REST](docs/api/overview.md) | Visão geral, autenticação, endpoints e exemplos |
-
-> Para documentação completa da API com exemplos no Postman, Python, PHP e React Native, veja [FasMicro_API_Documentacao.docx](FasMicro_API_Documentacao.docx).
-
 ---
 
 ## Contexto Acadêmico
