@@ -12,10 +12,11 @@ class ControllerMain
     protected $action;
     protected $request;
     protected $template;
-    
+
     public $model;
 
     use RequestTrait;
+    use ModelLoaderTrait;
 
     /**
      * __construct
@@ -53,21 +54,6 @@ class ControllerMain
     {
         if (((int)Session::get("userNivel") >= $nivelMinino)) {
             return Redirect::page("Home/viewErros", ["msgError" => "Você não possui permissão neste programa"]);
-        }
-    }
-
-    /**
-     * loadModel
-     *
-     * @param string $nomeModel
-     * @return void|object
-     */
-    public function loadModel(string $nomeModel)
-    {
-        $pathModel = 'App\Model\\' . $nomeModel . "Model";
-
-        if (class_exists($pathModel)) {
-            return new $pathModel();
         }
     }
 

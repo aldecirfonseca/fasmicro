@@ -4,6 +4,23 @@ namespace Core\Library;
 
 class Ambiente
 {
+    /**
+     * get
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function get(string $key, mixed $default = null): mixed
+    {
+        return $_ENV[$key] ?? $default;
+    }
+
+    /**
+     * load
+     *
+     * @return void
+     */
     public function load()
     {
         // analisar e carregar o conteúdo do arquivo .env em um array

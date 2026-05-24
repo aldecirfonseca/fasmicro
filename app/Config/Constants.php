@@ -18,6 +18,9 @@ defined("CONTROLLER_AUTH") || define("CONTROLLER_AUTH", [
 // Tamanho máximo para upload de arquivos (5 mega bytes)
 defined('FILE_MAXSIZE') || define('FILE_MAXSIZE', 5);
 
+// Versão padrão da API (usada quando a URL não especifica versão)
+defined('API_VERSION') || define('API_VERSION', 1);
+
 // Arquivos aceitos em Uploads
 defined('FILE_ALLOWEDTYPES') || define('FILE_ALLOWEDTYPES', [
     'image/jpg', 
