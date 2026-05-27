@@ -306,7 +306,8 @@ class Login extends ControllerMain
             'nivel'          => 1,
             'nome'           => $nome,
             'email'          => $email,
-            'senha'          => password_hash($senha, PASSWORD_DEFAULT),
+            'senha'          => $senha,
+            'confirmarSenha' => $senha,
             'statusRegistro' => 1
         ];
 
