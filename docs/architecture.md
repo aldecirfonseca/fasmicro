@@ -43,6 +43,7 @@ fasmicro/
 │       ├── ApiResponse.php     # Respostas JSON padronizadas
 │       ├── ApiRoutes.php       # Motor de roteamento REST
 │       ├── ControllerMain.php  # Controller base (web)
+│       ├── Csrf.php            # Proteção CSRF (Synchronizer Token Pattern)
 │       ├── Database.php        # Abstração PDO (query builder)
 │       ├── Email.php           # Wrapper PHPMailer
 │       ├── Erros.php           # Tratamento de erros
@@ -96,11 +97,12 @@ O FasMicro segue o padrão **Model-View-Controller**:
 | `Ambiente` | Leitura e parse do arquivo `.env` |
 | `Routes` | Roteador web: URL → Controller/Método |
 | `ApiRoutes` | Roteador REST com suporte a parâmetros dinâmicos |
-| `ControllerMain` | Classe base para controllers web |
+| `ControllerMain` | Classe base para controllers web — inclui validação CSRF automática |
+| `Csrf` | Proteção CSRF: geração, armazenamento em sessão e validação de token |
 | `ModelMain` | CRUD genérico + validação via PDO |
 | `Database` | Abstração PDO com query builder |
 | `Template` | Motor de templates com escape automático de HTML |
-| `Request` | Acesso aos dados da requisição HTTP (GET, POST, JSON) |
+| `Request` | Acesso aos dados da requisição HTTP (GET, POST, JSON) — filtra o token CSRF do POST |
 | `Session` | Gerenciamento de sessão PHP |
 | `Redirect` | Redirecionamentos com flash messages |
 | `Validator` | Validação de formulários com regras configuráveis por model |

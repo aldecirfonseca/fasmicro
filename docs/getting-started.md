@@ -10,6 +10,7 @@ Bem-vindo à documentação do framework **FasMicro**.
 | [Arquitetura](architecture.md) | Estrutura de diretórios e classes do núcleo |
 | [Rotas Web](routes.md) | Rotas públicas e administrativas da aplicação |
 | [Banco de Dados](database.md) | Tabelas, relacionamentos e papéis de usuário |
+| [Segurança — CSRF](security.md) | Proteção CSRF: como funciona, configuração e uso em formulários/AJAX |
 
 ### API REST
 
@@ -75,41 +76,53 @@ Certifique-se de que `mod_rewrite` está ativo e que `AllowOverride All` está c
 ## Configuração do `.env`
 
 ```ini
-# Ambiente: DEVELOPMENT ou PRODUCTION
-ENVIRONMENT=DEVELOPMENT
+; URL base do framework
+BASEURL=http://fasmicro/
 
-# Banco de dados (DEVELOPMENT)
-DEV_DB_HOST=localhost
-DEV_DB_NAME=fasmicro
-DEV_DB_USER=root
-DEV_DB_PASS=sua_senha
+; Conta para disparo de e-mail
+MAIL.HOST=smtp.gmail.com
+MAIL.SMTPAuth=true
+MAIL.PORT=587
+MAIL.SMTPSECURE=tls
+MAIL.NOME=seu_nome
+MAIL.USER=seu_email@seu_dominio.com
+MAIL.SENHA=sua_senha
 
-# Banco de dados (PRODUCTION)
-PROD_DB_HOST=fasmicro.com.br
-PROD_DB_NAME=fasmicro
-PROD_DB_USER=usuario
-PROD_DB_PASS=senha_producao
+; API JWT — OBRIGATÓRIO para usar a API REST
+JWT_SECRET=troque_esta_chave_por_uma_string_longa_e_aleatoria
+JWT_EXPIRE=3600
+JWT_REFRESH_EXPIRE=604800
 
-# E-mail SMTP
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USER=seu@gmail.com
-MAIL_PASS=sua_senha_de_app
-MAIL_FROM=seu@gmail.com
-MAIL_FROM_NAME=FasMicro
-
-# Super usuário inicial
-SUPER_USER_EMAIL=admin@fasmicro.com.br
-SUPER_USER_PASS=senha_admin
-
-# API JWT — OBRIGATÓRIO para usar a API REST
-JWT_SECRET=sua_chave_secreta_muito_segura_min_32_chars
-JWT_EXPIRE=3600           # Access token: 1 hora (segundos)
-JWT_REFRESH_EXPIRE=604800 # Refresh token: 7 dias (segundos)
-
-# CORS — domínio permitido (* = qualquer origem)
+; CORS — domínio permitido (* = qualquer origem; em produção, use o domínio real)
 API_CORS_ORIGIN=*
+
+; Super usuário inicial
+SUPERUSER_EMAIL=seu_email@seudominio.com.br
+SUPERUSER_SENHA=sua_senha
+SUPERUSER_NOME=seu_nome
+
+; Ambiente ativo
+ENVIRIONMENT=DEVELOPMENT
+
+[DEVELOPMENT]
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=fasmicro
+DB_USER=root
+DB_PASSWORD=
+
+[PRODUCTION]
+DB_CONNECTION=mysql
+DB_HOST=seu_servidor
+DB_PORT=3306
+DB_DATABASE=sua_base
+DB_USER=seu_user
+DB_PASSWORD=sua_senha
 ```
+
+> **Nota:** As constantes de CSRF são definidas diretamente em `app/Config/Constants.php`
+> com valores padrão seguros. Consulte [docs/security.md](security.md) para detalhes.
 
 ---
 

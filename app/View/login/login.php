@@ -34,6 +34,8 @@
 
             <form method="POST" action="<?= baseUrl() ?>Login/signIn">
 
+                <?= csrfField() ?>
+
                 <div class="mb-3">
                     <label for="email">E-mail</label>
                     <input

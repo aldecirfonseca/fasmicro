@@ -55,12 +55,14 @@ class Request
 
     /**
      * getPost
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getPost(): array
     {
-        return $this->trimRecursive($this->param['post']);
+        $post = $this->param['post'];
+        unset($post[CSRF_TOKEN_NAME]);
+        return $this->trimRecursive($post);
     }
 
     /**

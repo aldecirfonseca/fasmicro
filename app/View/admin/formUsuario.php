@@ -3,6 +3,8 @@
 <div class="m-3">
     <form method="POST" action="/Usuario/<?= $action ?>">
 
+        <?= csrfField() ?>
+
         <input type="hidden" name="id" id="id" value="<?= setValue('id', 0) ?>">
 
         <div class="row">

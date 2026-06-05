@@ -2,6 +2,7 @@
 
 namespace Core\Library;
 
+use Core\Library\Csrf;
 use Core\Library\Redirect;
 use Core\Library\Request;
 
@@ -29,6 +30,19 @@ class ControllerMain
         $this->method       = $aParametros['method'];
         $this->action       = $aParametros['action'];
         $this->template     = new Template();
+
+        // Validação CSRF: rejeita requisições mutantes sem token válido
+        if (CSRF_PROTECTION && !Csrf::isExcluded()) {
+            $httpMethod = $this->request->getHttpMethod();
+            if (in_array($httpMethod, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+                $headerVar = 'HTTP_' . strtoupper(str_replace('-', '_', CSRF_HEADER_NAME));
+                $token     = $_POST[CSRF_TOKEN_NAME] ?? $_SERVER[$headerVar] ?? null;
+                if (!Csrf::validate($token)) {
+                    http_response_code(419);
+                    return Redirect::page('Home/viewErros', ['msgError' => 'Token de segurança inválido. Recarregue a página e tente novamente.']);
+                }
+            }
+        }
 
         // Carregamento de helpers
         $this->loadHelper(['url', 'data', 'formHelper', 'jsHelper']);

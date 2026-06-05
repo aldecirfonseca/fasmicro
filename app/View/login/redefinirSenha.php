@@ -34,6 +34,8 @@
 
             <form method="POST" action="<?= baseUrl() ?>Login/salvarNovaSenha">
 
+                <?= csrfField() ?>
+
                 <input type="hidden" name="chave" value="<?= htmlspecialchars(setValue('chave'), ENT_QUOTES) ?>">
 
                 <div class="mb-3">

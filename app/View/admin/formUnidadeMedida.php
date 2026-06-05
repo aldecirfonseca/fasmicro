@@ -3,6 +3,8 @@
 <div class="m-3">
     <form method="POST" action="/unidademedida/<?= $action ?>">
 
+        <?= csrfField() ?>
+
         <input
             type="hidden"
             name="id"

@@ -5,6 +5,8 @@
 <div class="m-3">
     <form method="POST" action="/produto/<?= $action ?>" enctype="multipart/form-data">
 
+        <?= csrfField() ?>
+
         <input
             type="hidden"
             name="id"
@@ -140,6 +142,7 @@
             action="/Produtoanexo/upload/insert/<?= $produto_id ?>"
             enctype="multipart/form-data"
             class="mb-3">
+            <?= csrfField() ?>
             <div class="row align-items-end">
                 <div class="col-8">
                     <label for="anexos">Selecione os arquivos (máx. <?= FILE_MAXSIZE ?>MB cada)</label>
@@ -233,6 +236,7 @@
     </div>
 
     <form id="formExcluirAnexo" method="POST" action="">
+        <?= csrfField() ?>
         <input type="hidden" name="produto_id" id="excluir_produto_id" value="">
     </form>
 

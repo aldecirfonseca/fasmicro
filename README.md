@@ -34,6 +34,7 @@ O FasMicro é um micro-framework MVC construído do zero em PHP puro, sem depend
 - Template engine com layouts reutilizáveis
 - Upload de arquivos (imagens, documentos — limite 5 MB)
 - API REST com autenticação JWT, paginação e CORS
+- Proteção CSRF (Synchronizer Token Pattern) em todas as rotas web POST/PUT/PATCH/DELETE
 
 ---
 
@@ -67,6 +68,7 @@ Consulte a pasta **[docs/](docs/)** para documentação detalhada:
 | [Rotas Web](docs/routes.md) | Rotas públicas e administrativas |
 | [Banco de Dados](docs/database.md) | Tabelas, relacionamentos e papéis de usuário |
 | [Classe Database](docs/database-class.md) | Query Builder, métodos raw e referência completa da classe `Database` |
+| [Segurança — CSRF](docs/security.md) | Proteção CSRF: como funciona, configuração e uso em formulários/AJAX |
 | [API REST](docs/api/overview.md) | Visão geral, autenticação, endpoints e exemplos |
 ---
 
@@ -85,6 +87,7 @@ Projeto desenvolvido ao longo do 1º semestre de 2026 nas aulas práticas do 5º
 | 29/04/2026 | Upload de arquivos e helpers |
 | 06/05/2026 | Autenticação, CRUD e envio de e-mail |
 | 17/05/2026 | API REST com JWT, CORS e controle de acesso por nível |
+| 04/06/2026 | Proteção CSRF com Synchronizer Token Pattern |
 
 ---
 

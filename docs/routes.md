@@ -2,6 +2,8 @@
 
 As rotas web seguem o padrão `/{Controller}/{metodo}/{parametro}`. O roteador (`Routes`) mapeia a URL para o controller e método correspondentes, instanciando-os automaticamente.
 
+> **Proteção CSRF:** todas as rotas que recebem `POST`, `PUT`, `PATCH` ou `DELETE` são automaticamente protegidas contra CSRF pelo `ControllerMain`. Formulários devem incluir `<?= csrfField() ?>` e requisições AJAX devem enviar o header `X-CSRF-Token`. Consulte [docs/security.md](security.md) para detalhes.
+
 ---
 
 ## Rotas Públicas

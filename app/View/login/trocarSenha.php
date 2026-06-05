@@ -18,6 +18,8 @@
 
         <form method="POST" action="<?= baseUrl() ?>Login/atualizarSenha">
 
+            <?= csrfField() ?>
+
             <div class="mb-3">
                 <label for="senhaAtual">Senha Atual</label>
                 <input
