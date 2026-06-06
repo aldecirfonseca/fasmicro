@@ -27,6 +27,7 @@ class Database
     private $offset = null;
     private $params = [];
     private $unions = [];
+    private bool $inTransaction = false;
 
     /**
      * construct
@@ -67,6 +68,9 @@ class Database
      * destruct - Método que destroi a conexão com banco de dados e remove da memória todas as variáveis setadas
      */
     public function __destruct() {
+        if ($this->inTransaction) {
+            return;
+        }
         $this->disconnect();
         foreach ($this as $key => $value) {
             unset($this->$key);
@@ -88,24 +92,27 @@ class Database
      * @return object
      */
     public function connect()
-    { 
+    {
+        // Reutiliza a conexão aberta enquanto uma transação estiver ativa
+        if ($this->inTransaction && $this->conexao !== null) {
+            return $this->conexao;
+        }
+
         try {
             if ( $this->getDBDrive() == 'mysql' ) {            // MySQL
 
                 $this->conexao = new PDO(
-                                            $this->getDBDrive().":host=".$this->getHost().";port=".$this->getPort().";dbname=".$this->getDB(), 
-                                            $this->getUser(), 
-                                            $this->getPassword(), 
-                                            [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]
+                                            $this->getDBDrive().":host=".$this->getHost().";port=".$this->getPort().";dbname=".$this->getDB().";charset=utf8mb4",
+                                            $this->getUser(),
+                                            $this->getPassword()
                                         );
 
             } else if ( $this->getDBDrive() == 'sqlsrv' ) {    // SQL Server
 
                 $this->conexao = new PDO(
-                                            $this->getDBDrive().":Server=".$this->getHost().",".$this->getPort().";DataBase=".$this->getDB(), 
-                                            $this->getUser(), 
-                                            $this->getPassword(), 
-                                            [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]
+                                            $this->getDBDrive().":Server=".$this->getHost().",".$this->getPort().";DataBase=".$this->getDB(),
+                                            $this->getUser(),
+                                            $this->getPassword()
                                         );
 
             }
@@ -113,12 +120,11 @@ class Database
             $this->conexao->setAttribute(PDO::ATTR_ERRMODE, $this->conexao::ERRMODE_EXCEPTION);
 
         } catch (PDOException $i) {
-            //se houver exceçao, exibe
-            die("Erro: <code>" . $i->getMessage() . "</code>");
+            throw new \RuntimeException("Falha na conexão com o banco de dados: " . $i->getMessage(), 500, $i);
         }
 
         return ($this->conexao);
-        
+
     }
 
     /**
@@ -126,9 +132,54 @@ class Database
      *
      * @return void
      */
-    private function disconnect() 
+    private function disconnect()
     {
-        $this->conexao = null;
+        if (!$this->inTransaction) {
+            $this->conexao = null;
+        }
+    }
+
+    /**
+     * beginTransaction - Inicia uma transação no banco de dados
+     *
+     * @return void
+     * @throws \Exception se já houver uma transação ativa
+     */
+    public function beginTransaction(): void
+    {
+        if ($this->inTransaction) {
+            throw new \Exception("Já existe uma transação ativa.");
+        }
+        $this->connect()->beginTransaction();
+        $this->inTransaction = true;
+    }
+
+    /**
+     * commit - Confirma a transação ativa
+     *
+     * @return void
+     */
+    public function commit(): void
+    {
+        if ($this->inTransaction && $this->conexao !== null) {
+            $this->conexao->commit();
+            $this->inTransaction = false;
+            $this->conexao = null;
+        }
+    }
+
+    /**
+     * rollback - Desfaz a transação ativa
+     *
+     * @return void
+     */
+    public function rollback(): void
+    {
+        if ($this->inTransaction && $this->conexao !== null) {
+            $this->conexao->rollBack();
+            $this->inTransaction = false;
+            $this->conexao = null;
+        }
     }
 
     /**
@@ -174,11 +225,8 @@ class Database
             return $rs;
 
         } catch (Exception $e) {
-            var_dump($sql);
-            print_r($query->debugDumpParams());
-            var_dump($params);
-            echo 'Exceção capturada: '.  $e->getMessage(); exit;
-        }     
+            throw $e;
+        }
     }
 
     /**
@@ -200,8 +248,8 @@ class Database
             return $rs;
 
         } catch (Exception $e) {
-            echo 'Exceção capturada: '.  $e->getMessage(); exit;
-        }  
+            throw $e;
+        }
     }
 
     /**
@@ -221,7 +269,7 @@ class Database
             $rs = $query->rowCount(); 
             
         } catch (Exception $exc) {
-            echo "Erro ao Excluir Registro, favor entrar em contato com Suporte Tenico" . $exc->getTraceAsString();
+            throw $exc;
         }
 
         self::__destruct();

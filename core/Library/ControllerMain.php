@@ -66,7 +66,7 @@ class ControllerMain
      */
     public function validaNivelAcesso(int $nivelMinino = 20)
     {
-        if (((int)Session::get("userNivel") >= $nivelMinino)) {
+        if (((int)Session::get("userNivel") > $nivelMinino)) {
             return Redirect::page("Home/viewErros", ["msgError" => "Você não possui permissão neste programa"]);
         }
     }

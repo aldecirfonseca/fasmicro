@@ -475,6 +475,83 @@ $this->db->dbClear();
 
 ---
 
+## Transações
+
+O FasMicro suporta transações PDO via três métodos: `beginTransaction()`, `commit()` e `rollback()`.
+
+Durante uma transação ativa, a classe **reutiliza a mesma conexão PDO** para todas as operações, garantindo atomicidade. A conexão só é liberada após `commit()` ou `rollback()`.
+
+### `beginTransaction()`
+
+Abre uma transação. Lança `\Exception` se já houver uma transação ativa.
+
+### `commit()`
+
+Confirma todas as operações realizadas desde `beginTransaction()` e libera a conexão.
+
+### `rollback()`
+
+Desfaz todas as operações realizadas desde `beginTransaction()` e libera a conexão.
+
+---
+
+### Padrão de uso
+
+```php
+$this->db->beginTransaction();
+try {
+    // Operações atômicas
+    $pedidoId = $this->db->table('pedido')->insert($dadosPedido);
+
+    $this->db->table('estoque')
+        ->where('produto_id', $produtoId)
+        ->update(['saldo' => $novoSaldo]);
+
+    $this->db->commit();
+    return $pedidoId;
+
+} catch (\Exception $e) {
+    $this->db->rollback();
+    throw $e;
+}
+```
+
+### Exemplo em um Model
+
+```php
+class PedidoModel extends ModelMain
+{
+    protected $table = 'pedido';
+
+    public function registrarPedido(array $pedido, array $itens): int
+    {
+        $this->db->beginTransaction();
+        try {
+            $pedidoId = $this->db->table('pedido')->insert($pedido);
+
+            foreach ($itens as $item) {
+                $item['pedido_id'] = $pedidoId;
+                $this->db->table('pedido_item')->insert($item);
+
+                $this->db->table('estoque')
+                    ->where('produto_id', $item['produto_id'])
+                    ->update(['saldo' => $item['novoSaldo']]);
+            }
+
+            $this->db->commit();
+            return $pedidoId;
+
+        } catch (\Exception $e) {
+            $this->db->rollback();
+            Session::set('msgError', 'Falha ao registrar pedido: ' . $e->getMessage());
+            return 0;
+        }
+    }
+}
+```
+
+---
+
 ## Métodos Raw (SQL Direto)
 
 Use quando a query for complexa demais para o Query Builder.

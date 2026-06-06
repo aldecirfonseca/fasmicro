@@ -46,7 +46,9 @@ fasmicro/
 │       ├── Csrf.php            # Proteção CSRF (Synchronizer Token Pattern)
 │       ├── Database.php        # Abstração PDO (query builder)
 │       ├── Email.php           # Wrapper PHPMailer
-│       ├── Erros.php           # Tratamento de erros
+│       ├── ErrorHandler.php    # Handler global de exceções e erros PHP
+│       ├── Erros.php           # Respostas 404/500 para controller/método não encontrado
+│       ├── Logger.php          # Sistema de logging estruturado compatível com PSR-3
 │       ├── Files.php           # Upload de arquivos
 │       ├── Jwt.php             # Tokens JWT (HS256, sem dependências externas)
 │       ├── ModelLoaderTrait.php# Carregamento dinâmico de Models
@@ -69,6 +71,8 @@ fasmicro/
 │   ├── .htaccess               # Rewrite rules (tudo para index.php)
 │   └── index.php               # Front controller
 │
+├── storage/
+│   └── logs/                   # Logs diários gerados pelo Logger (app-YYYY-MM-DD.log)
 ├── uploads/                    # Arquivos enviados pelos usuários
 ├── vendor/                     # Dependências Composer (PHPMailer)
 ├── docs/                       # Documentação
@@ -99,8 +103,10 @@ O FasMicro segue o padrão **Model-View-Controller**:
 | `ApiRoutes` | Roteador REST com suporte a parâmetros dinâmicos |
 | `ControllerMain` | Classe base para controllers web — inclui validação CSRF automática |
 | `Csrf` | Proteção CSRF: geração, armazenamento em sessão e validação de token |
+| `ErrorHandler` | Handler global: captura exceções, erros PHP e fatais; responde em HTML ou JSON (API); loga via `Logger` |
+| `Logger` | Logging estruturado (PSR-3): oito níveis, rotação diária em `storage/logs/`, filtragem por `LOG_LEVEL` |
 | `ModelMain` | CRUD genérico + validação via PDO |
-| `Database` | Abstração PDO com query builder |
+| `Database` | Abstração PDO com query builder e suporte a transações |
 | `Template` | Motor de templates com escape automático de HTML |
 | `Request` | Acesso aos dados da requisição HTTP (GET, POST, JSON) — filtra o token CSRF do POST |
 | `Session` | Gerenciamento de sessão PHP |

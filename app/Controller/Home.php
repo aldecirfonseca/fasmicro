@@ -52,7 +52,7 @@ class Home extends ControllerMain
      */
     public function viewErros()
     {
-        return $this->view("erros");
+        return $this->view("erros", ['titulo' => 'Erro']);
     }
 
     /**

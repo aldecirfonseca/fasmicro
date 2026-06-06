@@ -11,6 +11,7 @@ Bem-vindo à documentação do framework **FasMicro**.
 | [Rotas Web](routes.md) | Rotas públicas e administrativas da aplicação |
 | [Banco de Dados](database.md) | Tabelas, relacionamentos e papéis de usuário |
 | [Segurança — CSRF](security.md) | Proteção CSRF: como funciona, configuração e uso em formulários/AJAX |
+| [Logging (PSR-3)](logging.md) | Logger: níveis, configuração, uso nos controllers e integração com ErrorHandler |
 
 ### API REST
 
@@ -87,6 +88,10 @@ MAIL.SMTPSECURE=tls
 MAIL.NOME=seu_nome
 MAIL.USER=seu_email@seu_dominio.com
 MAIL.SENHA=sua_senha
+
+; Logging (PSR-3) — níveis: debug | info | notice | warning | error | critical | alert | emergency
+; Em produção use "error" para registrar apenas falhas relevantes
+LOG_LEVEL=debug
 
 ; API JWT — OBRIGATÓRIO para usar a API REST
 JWT_SECRET=troque_esta_chave_por_uma_string_longa_e_aleatoria

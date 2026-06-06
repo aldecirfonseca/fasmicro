@@ -30,11 +30,14 @@ O FasMicro é um micro-framework MVC construído do zero em PHP puro, sem depend
 - CRUD de Produtos, Categorias e Unidades de Medida
 - Formulário de contato via SMTP (Gmail / PHPMailer)
 - Roteamento customizado com URLs amigáveis
-- Validação de formulários com regras configuráveis
+- Validação de formulários com 20+ regras configuráveis (`unique`, `confirmed`, `cpf`, `date`, `after`, `before`, `regex`, `in`, `url`, `mimes`, `max_file`, `array`, `nullable`, `sometimes` e outras)
 - Template engine com layouts reutilizáveis
 - Upload de arquivos (imagens, documentos — limite 5 MB)
 - API REST com autenticação JWT, paginação e CORS
 - Proteção CSRF (Synchronizer Token Pattern) em todas as rotas web POST/PUT/PATCH/DELETE
+- Transações no banco de dados (`beginTransaction` / `commit` / `rollback`) para operações atômicas
+- Tratamento centralizado de erros e exceções com páginas de erro HTML e respostas JSON para API
+- Sistema de logging estruturado (PSR-3) com oito níveis de severidade, rotação diária de arquivos e configuração via `.env` (`LOG_LEVEL`)
 
 ---
 
@@ -67,7 +70,10 @@ Consulte a pasta **[docs/](docs/)** para documentação detalhada:
 | [Arquitetura](docs/architecture.md) | Estrutura de diretórios e classes do núcleo |
 | [Rotas Web](docs/routes.md) | Rotas públicas e administrativas |
 | [Banco de Dados](docs/database.md) | Tabelas, relacionamentos e papéis de usuário |
-| [Classe Database](docs/database-class.md) | Query Builder, métodos raw e referência completa da classe `Database` |
+| [Classe Database](docs/database-class.md) | Query Builder, transações, métodos raw e referência completa da classe `Database` |
+| [Validação](docs/validator.md) | Referência completa das regras de validação com exemplos |
+| [Tratamento de Erros](docs/error-handling.md) | ErrorHandler: exceções, erros PHP, modo debug e respostas por contexto |
+| [Logging (PSR-3)](docs/logging.md) | Logger: níveis de severidade, configuração, uso nos controllers e integração com ErrorHandler |
 | [Segurança — CSRF](docs/security.md) | Proteção CSRF: como funciona, configuração e uso em formulários/AJAX |
 | [API REST](docs/api/overview.md) | Visão geral, autenticação, endpoints e exemplos |
 ---
@@ -88,6 +94,8 @@ Projeto desenvolvido ao longo do 1º semestre de 2026 nas aulas práticas do 5º
 | 06/05/2026 | Autenticação, CRUD e envio de e-mail |
 | 17/05/2026 | API REST com JWT, CORS e controle de acesso por nível |
 | 04/06/2026 | Proteção CSRF com Synchronizer Token Pattern |
+| 05/06/2026 | Transações no banco de dados, tratamento centralizado de erros e regras de validação adicionais |
+| 06/06/2026 | Sistema de logging estruturado (PSR-3) com integração ao ErrorHandler |
 
 ---
 
