@@ -72,9 +72,6 @@ class Database
             return;
         }
         $this->disconnect();
-        foreach ($this as $key => $value) {
-            unset($this->$key);
-        }
     }
 
     /*Metodos que trazem o conteudo da variavel desejada
@@ -197,9 +194,9 @@ class Database
         $query = $this->connect()->prepare( $sql , array( PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL ) );
         $query->execute( $params );
         $rs = $query;
-        
-        self::__destruct();
-        
+
+        $this->disconnect();
+
         return $rs;
         
     }
@@ -220,7 +217,7 @@ class Database
             
             $rs      = $conexao->lastInsertId(); // or die(print_r($query->errorInfo(), true));
             
-            self::__destruct();
+            $this->disconnect();
             
             return $rs;
 
@@ -243,7 +240,7 @@ class Database
             $query->execute($params);
             
             $rs = $query->rowCount();// or die(print_r($query->errorInfo(), true));
-            self::__destruct();            
+            $this->disconnect();            
             
             return $rs;
 
@@ -272,8 +269,8 @@ class Database
             throw $exc;
         }
 
-        self::__destruct();
-        
+        $this->disconnect();
+
         if ($rs == array()) {
             return false;
         } else {
@@ -749,7 +746,7 @@ class Database
         $query = $this->connect()->prepare($cSql, [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL]);
         $query->execute($allParams);
 
-        self::dbClear();
+        $this->dbClear();
 
         if ($tipoRetorno == "all") {
             return $this->dbBuscaArrayAll($query);
@@ -828,7 +825,7 @@ class Database
 
             $rs = $conexao->lastInsertId();
 
-            self::dbClear();
+            $this->dbClear();
 
         } catch (\Exception $err) {
             Session::set("msgError", "Erro ao inserir dados na base de dados: " . $err->getMessage());
@@ -866,7 +863,7 @@ class Database
 
             $rs = $query->rowCount();
 
-            self::dbClear();
+            $this->dbClear();
 
         } catch (\Exception $err) {
             Session::set("msgError", "Erro ao Atualizar dados na base de dados: " . $err->getMessage());
@@ -895,7 +892,7 @@ class Database
 
             $rs = $query->rowCount();
 
-            self::dbClear();
+            $this->dbClear();
 
         } catch (\Exception $err) {
             Session::set("msgError", "Erro ao Excluir dados na base de dados: " . $err->getMessage());
