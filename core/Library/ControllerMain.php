@@ -6,6 +6,15 @@ use Core\Library\Csrf;
 use Core\Library\Redirect;
 use Core\Library\Request;
 
+/**
+ * ControllerMain — Classe base para todos os Controllers da aplicação.
+ *
+ * Responsabilidades:
+ *   - Inicializa Request, Template e o Model correspondente ao controller ativo
+ *   - Valida o token CSRF em requisições mutantes (POST/PUT/PATCH/DELETE)
+ *   - Carrega helpers e verifica se o usuário está autenticado
+ *   - Fornece actions CRUD genéricas (index / form / insert / update / delete)
+ */
 class ControllerMain
 {
     protected $controller;

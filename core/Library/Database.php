@@ -6,7 +6,17 @@ use PDO;
 use PDOException;
 use Exception;
 
-class Database 
+/**
+ * Database — Query Builder e camada de acesso a dados via PDO.
+ *
+ * Suporta MySQL e SQL Server. Oferece dois modos de uso:
+ *  - Raw: dbSelect / dbInsert / dbUpdate / dbDelete (SQL manual)
+ *  - Query Builder encadeável: select / table / join / where / orderBy / limit / findAll / first / insert / update / delete
+ *
+ * Transações: beginTransaction → commit / rollback.
+ * Durante uma transação a conexão é mantida aberta e o __destruct é postergado.
+ */
+class Database
 {
     private $conexao;
     private static $dbdrive  = "";

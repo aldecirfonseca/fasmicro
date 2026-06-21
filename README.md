@@ -96,6 +96,8 @@ Projeto desenvolvido ao longo do 1º semestre de 2026 nas aulas práticas do 5º
 | 04/06/2026 | Proteção CSRF com Synchronizer Token Pattern |
 | 05/06/2026 | Transações no banco de dados, tratamento centralizado de erros e regras de validação adicionais |
 | 06/06/2026 | Sistema de logging estruturado (PSR-3) com integração ao ErrorHandler |
+| 15/06/2026 | Ajuste no método `getById` do ModelMain (retorna array vazio para id=0) |
+| 17/06/2026 | Correção de erro fatal no `__destruct` da classe Database (dupla destruição durante transações) |
 
 ---
 

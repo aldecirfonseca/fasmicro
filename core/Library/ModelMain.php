@@ -2,6 +2,15 @@
 
 namespace Core\Library;
 
+/**
+ * ModelMain — Classe base para todos os Models da aplicação.
+ *
+ * Encapsula as operações CRUD padrão (lista / getById / insert / insertGetId / update / delete)
+ * usando a classe Database como query builder. As subclasses devem definir:
+ *   - $table        : nome da tabela
+ *   - $primaryKey   : coluna PK (padrão "id")
+ *   - $validationRules : regras passadas ao Validator::make() antes de inserir/atualizar
+ */
 class ModelMain
 {
     public $db;
@@ -28,9 +37,9 @@ class ModelMain
     }
 
     /**
-     * Undocumented function
+     * lista - Retorna todos os registros da tabela ordenados pelo campo informado.
      *
-     * @param string $orderBy
+     * @param string $orderBy Campo de ordenação (padrão: "descricao")
      * @return array
      */
     public function lista($orderBy = "descricao")
@@ -41,7 +50,8 @@ class ModelMain
     }
 
     /**
-     * Undocumented function
+     * getById - Busca um registro pelo seu ID.
+     * Retorna array vazio se $id for 0.
      *
      * @param int $id
      * @return array
@@ -56,7 +66,8 @@ class ModelMain
     }
 
     /**
-     * Undocumented function
+     * insert - Valida os dados e insere um novo registro na tabela.
+     * Retorna false se a validação falhar.
      *
      * @param array $dados
      * @return bool
@@ -91,9 +102,10 @@ class ModelMain
     }
 
     /**
-     * Undocumented function
+     * update - Valida os dados e atualiza o registro identificado pela chave primária.
+     * Retorna false se a validação falhar.
      *
-     * @param array $dados
+     * @param array $dados Deve conter a chave primária ($this->primaryKey)
      * @return bool
      */
     public function update($dados)
@@ -114,9 +126,9 @@ class ModelMain
 
 
     /**
-     * Undocumented function
+     * delete - Remove o registro identificado pela chave primária presente em $dados.
      *
-     * @param array $dados
+     * @param array $dados Deve conter a chave primária ($this->primaryKey)
      * @return bool
      */
     public function delete($dados) 

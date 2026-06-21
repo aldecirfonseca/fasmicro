@@ -49,6 +49,15 @@ class Template
         $this->data = array_merge($this->data, $data);
     }
 
+    /**
+     * render - Renderiza uma view dentro de um layout.
+     * Passa $layout vazio "" para renderizar sem layout.
+     *
+     * @param string      $view   Caminho relativo à pasta View/ (ex: "admin/listaProduto")
+     * @param array       $data   Variáveis disponibilizadas na view após escape
+     * @param string|null $layout Nome do layout (padrão: $this->layout); "" para sem layout
+     * @return void
+     */
     public function render(string $view, array $data = [], ?string $layout = null) : void
     {
         if (!empty($data)) {
@@ -101,6 +110,13 @@ class Template
         return ob_get_clean();
     }
 
+    /**
+     * escape - Aplica htmlspecialchars recursivamente em strings.
+     * Objetos Raw são passados sem escape.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
     private function escape(mixed $value) : mixed
     {
         if ($value instanceof Raw) {
